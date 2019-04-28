@@ -5,6 +5,10 @@ sure that you've read the task properly before starting and ask questions if any
 
 The recipient service which should be used in this example can be found at ./src/app/services/recipient-api.service.ts
 
+## Running the Project 
+Run `npm Install` to install the missing dependancies.
+Run `ng serve --open` to run the development server. 
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
