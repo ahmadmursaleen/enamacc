@@ -1,0 +1,82 @@
+<mat-drawer-container autosize class="container">
+  <mat-drawer #drawer mode="side" class="sidenav" opened>
+    <mat-nav-list id="recList">
+      <mat-list-item *ngFor="let list of recipientList" id="recipientsList">
+        <button mat-raised-button (click)="selectRecipientList(list)">
+          {{ list.name }}
+        </button>
+      </mat-list-item>
+    </mat-nav-list>
+    <form
+      class="example-form"
+      style="padding-left: 15px;"
+      [formGroup]="form"
+      (ngSubmit)="addEmail()"
+    >
+      <mat-form-field class="example-full-width">
+        <input
+          formControlName="newEmail"
+          type="text"
+          placeholder="Email/Company"
+          aria-label="Number"
+          matInput
+          [matAutocomplete]="auto"
+          id="autoInput"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let option of autoList; let i = index"
+            [value]="option"
+            (click)="addCompany(option, i)"
+          >
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+  </mat-drawer>
+  <mat-drawer-content>
+    <h1>Welcome to {{ title }} display</h1>
+    <h2>
+      Selected Recipients:
+      {{
+        currentRecipientList.companyRecipients.length + currentRecipientList.emailRecipients.length
+      }}
+    </h2>
+    <h3>Recipient List Name : {{ currentRecipientList.name }}</h3>
+    <div>
+      <h4>Companies List :</h4>
+      <mat-nav-list dense id="companyList">
+        <mat-list-item *ngFor="let id of currentRecipientList.companyRecipients">
+          <span *ngFor="let company of companiesList">
+            <span *ngIf="company.id === id"
+              >{{ company.name }}
+              <mat-icon (click)="deleteCompany(company.id, company.name)" style="font-size: 15px;"
+                >clear</mat-icon
+              ></span
+            >
+          </span>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+    <h4>Email List:</h4>
+    <mat-accordion>
+      <mat-expansion-panel
+        *ngFor="let item of domains | keyvalue"
+        style="width: 250px"
+        id="emailPanel"
+      >
+        <mat-expansion-panel-header>
+          {{ item.key }}
+          <mat-icon (click)="deleteDomain(item.key, item.value)" style="font-size: 15px;"
+            >clear</mat-icon
+          >
+        </mat-expansion-panel-header>
+        <div *ngFor="let sub of item.value" style="cursor: pointer;">
+          {{ sub
+          }}<mat-icon (click)="deleteEmail(item.key, sub)" style="font-size: 15px;">clear</mat-icon>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-drawer-content>
+</mat-drawer-container>
