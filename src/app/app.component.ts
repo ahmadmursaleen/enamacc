@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RecipientApi, RecipientList, Company } from './services/recipient-api.service';
 import { Domains } from './domains';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,7 @@ export class AppComponent {
   myControl: FormControl;
   autoList: Company[];
   form: FormGroup;
+  _subscription: Subscription;
 
   constructor(private RecipientApi: RecipientApi, private FormBuilder: FormBuilder) {
     this.form = FormBuilder.group({
@@ -26,7 +28,7 @@ export class AppComponent {
 
   ngOnInit() {
     // Invoking the service to get recipient lists and comapnies lists on initialization
-    this.RecipientApi.getRecipientLists().subscribe(
+    this._subscription = this.RecipientApi.getRecipientLists().subscribe(
       response => {
         this.recipientList = response;
         this.currentRecipientList = response[0];
@@ -35,7 +37,7 @@ export class AppComponent {
         alert('Error:' + error.statusText);
       }
     );
-    this.RecipientApi.getCompanies().subscribe(
+    this._subscription = this.RecipientApi.getCompanies().subscribe(
       response => {
         this.companiesList = response;
       },
@@ -48,6 +50,11 @@ export class AppComponent {
 
     // Creating a seperate companies list to use for the auto complete feature
     this.autoList = this.companiesList.map(a => Object.assign({}, a));
+  }
+
+  ngOnDestroy() {
+    // unsubscribing from an observable
+    this._subscription.unsubscribe();
   }
 
   // Function to select the current recipient list displayed in the mat drawer content
